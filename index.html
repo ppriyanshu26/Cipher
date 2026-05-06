@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto App</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>AES Encryption/Decryption</h1>
+            <p class="subtitle">Runs locally in your browser — no server, no API key.</p>
+        </header>
+
+        <section class="card info" aria-label="How it works">
+            <h2>How it works</h2>
+            <ul>
+                <li>Your key is hashed with SHA-256 to create a 256-bit AES key.</li>
+                <li>Encrypt: a new random 12-byte IV is generated each time, then AES-GCM encrypts your plaintext.</li>
+                <li>The output is Base64URL of <strong>IV + ciphertext</strong> (the ciphertext includes the GCM authentication tag).</li>
+                <li>AES-GCM provides confidentiality <em>and</em> integrity: if the key or ciphertext is wrong/tampered, the integrity check fails.</li>
+                <li>That’s why a wrong password shows <strong>Failed to decrypt</strong> instead of returning “garbage” plaintext.</li>
+                <li>The random IV ensures the same plaintext (with the same key) produces a different ciphertext each time you encrypt.</li>
+            </ul>
+        </section>
+
+        <section class="card" aria-label="Crypto form">
+            <form id="crypto-form">
+                <div class="form-group">
+                    <label>Mode:</label>
+                    <div class="mode-row">
+                        <label class="radio">
+                            <input type="radio" name="mode" value="encrypt" id="encrypt" checked onchange="updateLabels()" />
+                            <span>Encrypt</span>
+                        </label>
+
+                        <label class="radio">
+                            <input type="radio" name="mode" value="decrypt" id="decrypt" onchange="updateLabels()" />
+                            <span>Decrypt</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="text-label" for="text">Plaintext:</label>
+                    <textarea name="text" id="text" rows="4" required placeholder="Type plaintext to encrypt (or paste ciphertext to decrypt)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="key">Key (min 8 chars):</label>
+                    <input type="text" name="key" id="key" required placeholder="Your secret key (kept in your browser)" />
+                </div>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <div id="result-container" aria-live="polite"></div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
